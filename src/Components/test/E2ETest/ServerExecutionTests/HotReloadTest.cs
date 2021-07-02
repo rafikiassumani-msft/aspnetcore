@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using BasicTestApp.HotReload;
 using Microsoft.AspNetCore.Components.E2ETest.Infrastructure;
@@ -11,7 +12,6 @@ using OpenQA.Selenium;
 using TestServer;
 using Xunit;
 using Xunit.Abstractions;
-using System.Net.Http;
 
 namespace Microsoft.AspNetCore.Components.E2ETest.ServerExecutionTests
 {
@@ -39,6 +39,7 @@ namespace Microsoft.AspNetCore.Components.E2ETest.ServerExecutionTests
         [Fact]
         public async Task InvokingRender_CausesComponentToRender()
         {
+
             Browser.Equal("This component was rendered 1 time(s).", () => Browser.Exists(By.TagName("h2")).Text);
             Browser.Equal("Initial title", () => Browser.Exists(By.TagName("h3")).Text);
             Browser.Equal("Component with ShouldRender=false was rendered 1 time(s).", () => Browser.Exists(By.TagName("h4")).Text);

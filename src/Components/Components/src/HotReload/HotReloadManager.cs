@@ -11,7 +11,11 @@ namespace Microsoft.AspNetCore.Components.HotReload
 {
     internal static class HotReloadManager
     {
-       internal static event Action? OnDeltaApplied;
+        public static bool TestIsHotReloadSupported { get; set; }
+
+        public static bool IsHotReloadSupported => MetadataUpdater.IsSupported || TestIsHotReloadSupported;
+
+        internal static event Action? OnDeltaApplied;
 
         public static void DeltaApplied()
         {
