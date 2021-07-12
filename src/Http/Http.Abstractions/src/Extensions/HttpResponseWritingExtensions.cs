@@ -66,6 +66,11 @@ namespace Microsoft.AspNetCore.Http
                 throw new ArgumentNullException(nameof(encoding));
             }
 
+            if(response.ContentType == null)
+            {
+                response.ContentType = ContentTypeConstants.PlainTextContentTypeWithCharset;
+            }
+
             // Need to call StartAsync before GetMemory/GetSpan
             if (!response.HasStarted)
             {

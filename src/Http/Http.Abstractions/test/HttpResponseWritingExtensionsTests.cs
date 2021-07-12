@@ -31,6 +31,15 @@ namespace Microsoft.AspNetCore.Http
             Assert.Equal(22, context.Response.Body.Length);
         }
 
+        [Fact]
+        public async Task WritingText_When_ContentType_IsNull_SetPlainText()
+        {
+            HttpContext context = CreateRequest();
+            await context.Response.WriteAsync("Hello World");
+
+            Assert.Equal(ContentTypeConstants.PlainTextContentTypeWithCharset, context.Response.ContentType);
+        }
+
         [Theory]
         [MemberData(nameof(Encodings))]
         public async Task WritingTextThatRequiresMultipleSegmentsWorks(Encoding encoding)
