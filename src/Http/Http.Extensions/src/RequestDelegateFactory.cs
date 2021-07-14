@@ -55,6 +55,7 @@ namespace Microsoft.AspNetCore.Http
         private static readonly MemberExpression CompletedTaskExpr = Expression.Property(null, (PropertyInfo)GetMemberInfo<Func<Task>>(() => Task.CompletedTask));
 
         private static readonly BinaryExpression TempSourceStringNotNullExpr = Expression.NotEqual(TempSourceStringExpr, Expression.Constant(null));
+        private const string PlainTextContentTypeWithCharset = "text/plain; charset=utf-8";
 
         /// <summary>
         /// Creates a <see cref="RequestDelegate"/> implementation for <paramref name="action"/>.
@@ -694,6 +695,7 @@ namespace Microsoft.AspNetCore.Http
             }
             else if (obj is string stringValue)
             {
+                SetContentType(httpContext);
                 await httpContext.Response.WriteAsync(stringValue);
             }
             else
@@ -723,7 +725,7 @@ namespace Microsoft.AspNetCore.Http
         private static Task ExecuteTaskOfString(Task<string?> task, HttpContext httpContext)
         {
             EnsureRequestTaskNotNull(task);
-
+            SetContentType(httpContext);
             static async Task ExecuteAwaited(Task<string> task, HttpContext httpContext)
             {
                 await httpContext.Response.WriteAsync(await task);
@@ -769,6 +771,7 @@ namespace Microsoft.AspNetCore.Http
 
         private static Task ExecuteValueTaskOfString(ValueTask<string?> task, HttpContext httpContext)
         {
+            SetContentType(httpContext);
             static async Task ExecuteAwaited(ValueTask<string> task, HttpContext httpContext)
             {
                 await httpContext.Response.WriteAsync(await task);
@@ -872,6 +875,14 @@ namespace Microsoft.AspNetCore.Http
             }
 
             return result;
+        }
+
+        private static void SetContentType(HttpContext httpContext)
+        {
+            if(httpContext.Response.ContentType == null)
+            {
+                httpContext.Response.ContentType = PlainTextContentTypeWithCharset;
+            }
         }
     }
 }
